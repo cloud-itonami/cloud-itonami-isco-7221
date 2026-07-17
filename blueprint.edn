@@ -1,0 +1,11 @@
+[{:itonami.blueprint/social-impact [:worker-safety :product-quality :manufacturing-continuity]
+  :itonami.blueprint/domain :manufacturing/forge-shop-scheduling-coordination
+  :itonami.blueprint/required-technologies [:robotics :identity :audit-ledger]
+  :itonami.blueprint/isco-08 "7221"
+  :itonami.blueprint/name "Forge Shop Scheduling Coordination Practice"
+  :itonami.blueprint/governor :forge-worker-governor
+  :itonami.blueprint/robotics true
+  :db/id -1
+  :itonami.blueprint/status :public-oss
+  :itonami.blueprint/id "cloud-itonami-isco-7221"
+  :itonami.blueprint/license "AGPL-3.0-or-later"}]
