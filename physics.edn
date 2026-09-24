@@ -1,0 +1,36 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a forge-shop scheduling/logistics coordination
+;; robot for blacksmiths, hammersmiths and forging-press workers (ISCO 7221)
+;; schedules the crew, logs task, materials usage and progress, and
+;; coordinates forging-materials supply orders; it never forges. Its physical
+;; work is billet logistics: bringing cold billets from stock to the furnace;
+;; the physics its press schedule depends on is how long a billet takes to
+;; heat through to forging temperature.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-7221"
+ :cases
+ [{:id :billet-to-furnace
+   :kind :transport
+   :procedure "logistics robot carries a rack of cold steel billets 30 m from the stock yard to the furnace charging table"
+   :params {:mass-kg 200.0 :distance-m 30.0 :v-max-mps 0.8 :a-max-mps2 0.4
+            :brake-decel-mps2 0.8 :drive-force-n 900.0 :crr 0.02
+            :cog-height-m 0.35 :support-half-length-m 0.45 :payload-cog-height-m 0.45}
+   :sweep {:param :payload-kg :values [250.0 500.0 1000.0 1500.0 2500.0]}
+   :quantity :cycle-time-s
+   :limit {:max 60.0 :basis "estimate: one charge per minute keeps the furnace loaded at the press's rate"}
+   :boundary {:lo 50.0 :hi 5000.0}}
+  {:id :billet-heat-through
+   :kind :thermal
+   :procedure "a square steel billet heats in a 1250 C gas furnace until its centre reaches 1150 C forging temperature; heat enters from all sides, so half the section is modelled with an adiabatic centre-plane; the billet half-thickness is swept"
+   :params {:conductivity-w-mk 30.0 :density-kg-m3 7800.0 :specific-heat-j-kgk 650.0
+            :t0-c 20.0 :t-hot-c 1250.0 :h-front-w-m2k 150.0 :h-back-w-m2k 0.0
+            :threshold-c 1150.0 :duration-s 14400.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.025 0.050 0.075 0.100 0.150]}
+   :quantity :time-to-threshold-s
+   :limit {:max 3600.0 :basis "estimate: a one-hour furnace residence slot per charge in the press schedule"}
+   :boundary {:lo 0.02 :hi 0.2}}]}
