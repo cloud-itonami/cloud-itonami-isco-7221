@@ -1,5 +1,5 @@
 (ns forgeworker.governor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [forgeworker.store :as store]
             [forgeworker.advisor :as advisor]
             [forgeworker.governor :as governor]))
